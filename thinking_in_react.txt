@@ -1,0 +1,28 @@
+Component hierarchy
+
+App
+  Header
+    DarkLightSwitch
+  AddTodo
+  TodoList
+    TodoListItem
+  Footer
+
+
+What is state?
+
+[y] list of todos
+[y] value of text input
+[y] dark/light mode
+
+
+Who is the state owner?
+
+App: list of todos, dark/light mode
+AddTodo: value of text input
+
+
+Lifting state up
+
+AddTodo -> addTodo
+TodoList -> deleteTodo, updateTodo
