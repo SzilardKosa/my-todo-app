@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export class TodoDetails extends Component {
   constructor(props) {
@@ -50,6 +51,12 @@ export class TodoDetails extends Component {
       </section>
     )
   }
+}
+
+TodoDetails.propTypes = {
+  match: PropTypes.object.isRequired,
+  todos: PropTypes.array.isRequired,
+  onUpdateTodo: PropTypes.func.isRequired,
 }
 
 export default withRouter(TodoDetails);

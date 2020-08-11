@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import close from './close.svg';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
@@ -11,7 +12,7 @@ export class TodoListItem extends Component {
     this.handleUpdate = this.handleUpdate.bind(this);
   }
 
-  handleDelete(event) {
+  handleDelete() {
     this.props.onDeleteTodo(this.props.todo.id);
   }
 
@@ -72,6 +73,12 @@ export class TodoListItem extends Component {
       </li>
     )
   }
+}
+
+TodoListItem.propTypes = {
+  todo: PropTypes.object.isRequired,
+  onDeleteTodo: PropTypes.func.isRequired,
+  onUpdateTodo: PropTypes.func.isRequired,
 }
 
 export default TodoListItem;

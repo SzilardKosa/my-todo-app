@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class AddTodo extends Component {
   constructor(props) {
@@ -20,7 +21,6 @@ export class AddTodo extends Component {
     this.props.onAddTodo(this.state.text)
   }
   
-
   render() {
     return (
       <section className="form-container">
@@ -35,6 +35,10 @@ export class AddTodo extends Component {
       </section>
     )
   }
+}
+
+AddTodo.propTypes = {
+  onAddTodo: PropTypes.func.isRequired,
 }
 
 export default AddTodo;
