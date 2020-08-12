@@ -9,18 +9,24 @@ export class Header extends Component {
       <header>
         <div className="container">
           <nav>
-            <Link to="/list" className="brand">TodoListApp</Link>
+            <Link to="/list" className="brand">
+              TodoListApp
+            </Link>
             <ul>
-              <li><Link to="/" >Home</Link></li>
-              <li><Link to="/list" >List</Link></li>
               <li>
-                <DarkLightSwitch/>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/list">List</Link>
+              </li>
+              <li>
+                <DarkLightSwitch />
               </li>
             </ul>
           </nav>
-        </div>        
+        </div>
       </header>
-    )
+    );
   }
 }
 

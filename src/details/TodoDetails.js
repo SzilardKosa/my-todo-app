@@ -5,28 +5,28 @@ import PropTypes from 'prop-types';
 
 export class TodoDetails extends Component {
   constructor(props) {
-    super(props)
-  
+    super(props);
+
     this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   handleUpdate(event) {
     const id = parseInt(this.props.match.params.id);
-    const prev = this.props.todos.find(item => item.id === id);
+    const prev = this.props.todos.find((item) => item.id === id);
     const target = event.target;
     const percent = parseInt(target.value);
     const done = percent === 100 ? true : false;
-    this.props.onUpdateTodo({...prev, done, percent})
+    this.props.onUpdateTodo({ ...prev, done, percent });
   }
-  
+
   render() {
     const id = parseInt(this.props.match.params.id);
-    const todo = this.props.todos.find(item => item.id === id);
+    const todo = this.props.todos.find((item) => item.id === id);
     const description = todo.description;
     const percent = todo.percent;
     const style = {
-      textDecoration: todo.done ? 'line-through' : 'none'
-    }
+      textDecoration: todo.done ? 'line-through' : 'none',
+    };
     return (
       <section className="details-container">
         <div className="container">
@@ -41,15 +41,18 @@ export class TodoDetails extends Component {
               type="range"
               value={percent}
               onChange={this.handleUpdate}
-              className="slider-input"/>
+              className="slider-input"
+            />
             <div className="slider-value">{percent}%</div>
           </div>
           <div className="btn-row">
-            <Link to="/list" ><button>Back</button></Link>
+            <Link to="/list">
+              <button>Back</button>
+            </Link>
           </div>
         </div>
       </section>
-    )
+    );
   }
 }
 
@@ -57,6 +60,6 @@ TodoDetails.propTypes = {
   match: PropTypes.object.isRequired,
   todos: PropTypes.array.isRequired,
   onUpdateTodo: PropTypes.func.isRequired,
-}
+};
 
 export default withRouter(TodoDetails);
