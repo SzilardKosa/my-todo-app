@@ -250,7 +250,6 @@ input:checked + .slider .icon {
 
 .list-container ul li:hover {
   background: var(--main-bg-hover);
-  transition: var(--bg-transition);
 }
 
 /* checkbox */

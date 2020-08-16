@@ -1,24 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import close from './close.svg';
 import PropTypes from 'prop-types';
-
 import { Link } from 'react-router-dom';
 
-export class TodoListItem extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
+const TodoListItem = (props) => {
+  function handleDelete() {
+    props.onDeleteTodo(props.todo.id);
   }
 
-  handleDelete() {
-    this.props.onDeleteTodo(this.props.todo.id);
-  }
-
-  handleUpdate(event) {
+  function handleUpdate(event) {
     const target = event.target;
-    const prev = this.props.todo;
+    const prev = props.todo;
     let done = prev.done;
     let percent = prev.percent;
     switch (target.name) {
@@ -33,44 +25,42 @@ export class TodoListItem extends Component {
       default:
         console.log('error');
     }
-    this.props.onUpdateTodo({ ...prev, done, percent });
+    props.onUpdateTodo({ ...prev, done, percent });
   }
 
-  render() {
-    const description = this.props.todo.description;
-    const percent = this.props.todo.percent;
-    const done = this.props.todo.done;
-    const id = this.props.todo.id;
-    const style = {
-      textDecoration: done ? 'line-through' : 'none',
-    };
-    return (
-      <li>
-        <label className="checkbox">
-          <input name="done" type="checkbox" checked={done} onChange={this.handleUpdate} />
-          <span className="checkmark"></span>
-        </label>
+  const description = props.todo.description;
+  const percent = props.todo.percent;
+  const done = props.todo.done;
+  const id = props.todo.id;
+  const style = {
+    textDecoration: done ? 'line-through' : 'none',
+  };
+  return (
+    <li>
+      <label className="checkbox">
+        <input name="done" type="checkbox" checked={done} onChange={handleUpdate} />
+        <span className="checkmark"></span>
+      </label>
 
-        <div className="description" style={style}>
-          <Link to={`/list/${id}`}>{description}</Link>
-        </div>
+      <div className="description" style={style}>
+        <Link to={`/list/${id}`}>{description}</Link>
+      </div>
 
-        <input
-          name="percent"
-          type="range"
-          value={percent}
-          onChange={this.handleUpdate}
-          className="slider-input"
-        />
-        <div className="slider-value">{percent}%</div>
+      <input
+        name="percent"
+        type="range"
+        value={percent}
+        onChange={handleUpdate}
+        className="slider-input"
+      />
+      <div className="slider-value">{percent}%</div>
 
-        <button className="delete-btn" onClick={this.handleDelete}>
-          <img src={close} alt="delete button" />
-        </button>
-      </li>
-    );
-  }
-}
+      <button className="delete-btn" onClick={handleDelete}>
+        <img src={close} alt="delete button" />
+      </button>
+    </li>
+  );
+};
 
 TodoListItem.propTypes = {
   todo: PropTypes.object.isRequired,
