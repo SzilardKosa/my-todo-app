@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './common/Header';
 import AddTodo from './list/AddTodo';
 import TodoList from './list/TodoList';
@@ -8,13 +8,27 @@ import TodoDetails from './details/TodoDetails';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 let idCount = 4;
+const initialTodos = [
+  { id: 1, description: 'Wash the dishes', percent: 75, done: false },
+  { id: 2, description: 'Make lunch', percent: 25, done: false },
+  { id: 3, description: 'Finish a book', percent: 100, done: true },
+];
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    { id: 1, description: 'Wash the dishes', percent: 75, done: false },
-    { id: 2, description: 'Make lunch', percent: 25, done: false },
-    { id: 3, description: 'Finish a book', percent: 100, done: true },
-  ]);
+  const [todos, setTodos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      const result = await new Promise((resolve) => setTimeout(() => resolve(initialTodos), 2000));
+
+      setTodos(result);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
   function handleAddTodo(text) {
     const newTodo = {
@@ -54,6 +68,7 @@ const App = () => {
           <Route path="/list">
             <AddTodo onAddTodo={handleAddTodo} />
             <TodoList
+              isLoading={isLoading}
               todos={todos}
               onUpdateTodo={handleUpdateTodo}
               onDeleteTodo={handleDeleteTodo}

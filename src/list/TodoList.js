@@ -2,7 +2,7 @@ import React from 'react';
 import TodoListItem from './TodoListItem';
 import PropTypes from 'prop-types';
 
-const TodoList = ({ todos, onDeleteTodo, onUpdateTodo }) => {
+const TodoList = ({ todos, onDeleteTodo, onUpdateTodo, isLoading }) => {
   const todoList = todos.map((todo) => (
     <TodoListItem
       key={todo.id}
@@ -14,7 +14,16 @@ const TodoList = ({ todos, onDeleteTodo, onUpdateTodo }) => {
   return (
     <section className="list-container">
       <div className="container">
-        <ul>{todoList}</ul>
+        {isLoading ? (
+          <div className="spinner">
+            <div className="lds-ripple">
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        ) : (
+          <ul>{todoList}</ul>
+        )}
       </div>
     </section>
   );
