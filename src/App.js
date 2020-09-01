@@ -1,85 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import Header from './common/Header';
-import AddTodo from './list/AddTodo';
-import TodoList from './list/TodoList';
-import Footer from './common/Footer';
-import Home from './home/Home';
-import TodoDetails from './details/TodoDetails';
+import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-let idCount = 4;
-const initialTodos = [
-  { id: 1, description: 'Wash the dishes', percent: 75, done: false },
-  { id: 2, description: 'Make lunch', percent: 25, done: false },
-  { id: 3, description: 'Finish a book', percent: 100, done: true },
-];
+import Header from './common/Header';
+import AddTodo from './todos/AddTodo';
+import TodoList from './todos/TodoList';
+import Footer from './common/Footer';
+import Home from './common/Home';
+import TodoDetails from './todos/TodoDetails';
 
 const App = () => {
-  const [todos, setTodos] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      const result = await new Promise((resolve) => setTimeout(() => resolve(initialTodos), 2000));
-
-      setTodos(result);
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  function handleAddTodo(text) {
-    const newTodo = {
-      id: idCount,
-      description: text,
-      percent: 0,
-      done: false,
-    };
-    idCount++;
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
-  }
-
-  function handleDeleteTodo(id) {
-    setTodos((prevTodos) => prevTodos.filter((item) => item.id !== id));
-  }
-
-  function handleUpdateTodo(todo) {
-    setTodos((prevTodos) =>
-      prevTodos.map((item) => {
-        if (item.id === todo.id) {
-          return todo;
-        } else {
-          return item;
-        }
-      })
-    );
-  }
-
   return (
     <Router>
-      <React.Fragment>
-        <Header />
-        <Switch>
-          <Route path="/list/:id">
-            <TodoDetails todos={todos} onUpdateTodo={handleUpdateTodo} />
-          </Route>
-          <Route path="/list">
-            <AddTodo onAddTodo={handleAddTodo} />
-            <TodoList
-              isLoading={isLoading}
-              todos={todos}
-              onUpdateTodo={handleUpdateTodo}
-              onDeleteTodo={handleDeleteTodo}
-            />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-        <Footer />
-      </React.Fragment>
+      <Header />
+      <Switch>
+        <Route
+          exact
+          path="/list"
+          render={() => (
+            <React.Fragment>
+              <AddTodo />
+              <TodoList />
+            </React.Fragment>
+          )}
+        />
+        <Route exact path="/list/:id" component={TodoDetails} />
+        <Route exact path="/" component={Home} />
+      </Switch>
+      <Footer />
     </Router>
   );
 };

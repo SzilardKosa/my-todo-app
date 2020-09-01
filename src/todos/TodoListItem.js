@@ -1,16 +1,25 @@
 import React from 'react';
-import close from './close.svg';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { todoUpdated, todoDeleted } from './todosSlice';
 import { Link } from 'react-router-dom';
 
-const TodoListItem = (props) => {
-  function handleDelete() {
-    props.onDeleteTodo(props.todo.id);
-  }
+import close from './close.svg';
+import PropTypes from 'prop-types';
 
-  function handleUpdate(event) {
-    const target = event.target;
-    const prev = props.todo;
+const TodoListItem = ({ todo }) => {
+  const dispatch = useDispatch();
+  const { description, percent, done, id } = todo;
+  const style = {
+    textDecoration: done ? 'line-through' : 'none',
+  };
+
+  const handleDelete = () => {
+    dispatch(todoDeleted({ todoId: id }));
+  };
+
+  const handleUpdate = (e) => {
+    const target = e.target;
+    const prev = todo;
     let done = prev.done;
     let percent = prev.percent;
     switch (target.name) {
@@ -25,16 +34,9 @@ const TodoListItem = (props) => {
       default:
         console.log('error');
     }
-    props.onUpdateTodo({ ...prev, done, percent });
-  }
-
-  const description = props.todo.description;
-  const percent = props.todo.percent;
-  const done = props.todo.done;
-  const id = props.todo.id;
-  const style = {
-    textDecoration: done ? 'line-through' : 'none',
+    dispatch(todoUpdated({ id, percent, done }));
   };
+
   return (
     <li>
       <label className="checkbox">
@@ -64,8 +66,6 @@ const TodoListItem = (props) => {
 
 TodoListItem.propTypes = {
   todo: PropTypes.object.isRequired,
-  onDeleteTodo: PropTypes.func.isRequired,
-  onUpdateTodo: PropTypes.func.isRequired,
 };
 
 export default TodoListItem;

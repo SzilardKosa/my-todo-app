@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { todoAdded } from './todosSlice';
 
-const AddTodo = (props) => {
+const AddTodo = () => {
   const [text, setText] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    props.onAddTodo(text);
-  }
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (canSave) {
+      dispatch(todoAdded(text));
+    }
+  };
+
+  const canSave = Boolean(text);
 
   return (
     <section className="form-container">
@@ -21,15 +28,13 @@ const AddTodo = (props) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <button type="submit">Add</button>
+          <button type="submit" disabled={!canSave}>
+            Add
+          </button>
         </form>
       </div>
     </section>
   );
-};
-
-AddTodo.propTypes = {
-  onAddTodo: PropTypes.func.isRequired,
 };
 
 export default AddTodo;

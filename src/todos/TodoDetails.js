@@ -1,23 +1,24 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { todoUpdated } from './todosSlice';
+import { Link } from 'react-router-dom';
 
-const TodoDetails = (props) => {
-  const params = useParams();
-  const id = parseInt(params.id);
-  const todo = props.todos.find((item) => item.id === id);
-  const description = todo.description;
-  const percent = todo.percent;
+const TodoDetails = ({ match }) => {
+  const { id: todoId } = match.params;
+  const todo = useSelector((state) => state.todos.find((todo) => todo.id === todoId));
+  const dispatch = useDispatch();
+
+  const { description, percent } = todo;
   const style = {
     textDecoration: todo.done ? 'line-through' : 'none',
   };
 
-  function handleUpdate(event) {
-    const target = event.target;
+  const handleUpdate = (e) => {
+    const target = e.target;
     const percent = parseInt(target.value);
     const done = percent === 100 ? true : false;
-    props.onUpdateTodo({ ...todo, done, percent });
-  }
+    dispatch(todoUpdated({ id: todoId, percent, done }));
+  };
 
   return (
     <section className="details-container">
@@ -45,11 +46,6 @@ const TodoDetails = (props) => {
       </div>
     </section>
   );
-};
-
-TodoDetails.propTypes = {
-  todos: PropTypes.array.isRequired,
-  onUpdateTodo: PropTypes.func.isRequired,
 };
 
 export default TodoDetails;
