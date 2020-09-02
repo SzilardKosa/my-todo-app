@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { todoAdded } from './todosSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+
+import { addNewTodo } from './todosSlice';
 
 const AddTodo = () => {
   const [text, setText] = useState('');
+  const [addRequestStatus, setAddRequestStatus] = useState('idle');
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const canSave = Boolean(text) && addRequestStatus === 'idle';
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (canSave) {
-      dispatch(todoAdded(text));
+      try {
+        setAddRequestStatus('pending');
+        const resultAction = await dispatch(
+          addNewTodo({ description: text, percent: 0, done: false })
+        );
+        unwrapResult(resultAction);
+        setText('');
+      } catch (err) {
+        console.error('Failed to save the todo: ', err);
+      } finally {
+        setAddRequestStatus('idle');
+      }
     }
   };
-
-  const canSave = Boolean(text);
 
   return (
     <section className="form-container">

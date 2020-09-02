@@ -1,11 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { todoUpdated } from './todosSlice';
 import { Link } from 'react-router-dom';
+
+import { updateTodo, selectTodoById } from './todosSlice';
 
 const TodoDetails = ({ match }) => {
   const { id: todoId } = match.params;
-  const todo = useSelector((state) => state.todos.find((todo) => todo.id === todoId));
+  const todo = useSelector((state) => selectTodoById(state, todoId));
   const dispatch = useDispatch();
 
   const { description, percent } = todo;
@@ -17,7 +18,7 @@ const TodoDetails = ({ match }) => {
     const target = e.target;
     const percent = parseInt(target.value);
     const done = percent === 100 ? true : false;
-    dispatch(todoUpdated({ id: todoId, percent, done }));
+    dispatch(updateTodo({ _id: todoId, percent, done }));
   };
 
   return (

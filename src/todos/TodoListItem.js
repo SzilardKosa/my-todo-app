@@ -1,20 +1,20 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { todoUpdated, todoDeleted } from './todosSlice';
 import { Link } from 'react-router-dom';
 
+import { updateTodo, deleteTodo } from './todosSlice';
 import close from './close.svg';
 import PropTypes from 'prop-types';
 
 const TodoListItem = ({ todo }) => {
   const dispatch = useDispatch();
-  const { description, percent, done, id } = todo;
+  const { description, percent, done, _id } = todo;
   const style = {
     textDecoration: done ? 'line-through' : 'none',
   };
 
   const handleDelete = () => {
-    dispatch(todoDeleted({ todoId: id }));
+    dispatch(deleteTodo(_id));
   };
 
   const handleUpdate = (e) => {
@@ -34,7 +34,7 @@ const TodoListItem = ({ todo }) => {
       default:
         console.log('error');
     }
-    dispatch(todoUpdated({ id, percent, done }));
+    dispatch(updateTodo({ _id, percent, done }));
   };
 
   return (
@@ -45,7 +45,7 @@ const TodoListItem = ({ todo }) => {
       </label>
 
       <div className="description" style={style}>
-        <Link to={`/list/${id}`}>{description}</Link>
+        <Link to={`/list/${_id}`}>{description}</Link>
       </div>
 
       <input
