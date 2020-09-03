@@ -9,6 +9,18 @@ const TodoDetails = ({ match }) => {
   const todo = useSelector((state) => selectTodoById(state, todoId));
   const dispatch = useDispatch();
 
+  if (!todo) {
+    return (
+      <section className="details-container">
+        <div className="container">
+          <div className="row">
+            <h2>Todo not found!</h2>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const { description, percent } = todo;
   const style = {
     textDecoration: todo.done ? 'line-through' : 'none',
