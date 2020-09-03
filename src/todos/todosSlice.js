@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const initialState = {
-  todos: [],
-  status: 'idle',
-  error: null,
-};
+const todosAdapter = createEntityAdapter({
+  selectId: (todo) => todo._id,
+});
+
+const initialState = todosAdapter.getInitialState({ status: 'idle', error: null });
 
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   const response = await axios.get('http://localhost:3030/todos');
@@ -19,12 +19,13 @@ export const addNewTodo = createAsyncThunk('todos/addNewTodo', async (newTodo) =
 
 export const updateTodo = createAsyncThunk('todos/updateTodo', async (updatedTodo) => {
   const response = await axios.patch(`http://localhost:3030/todos/${updatedTodo._id}`, updatedTodo);
-  return response.data;
+  const { _id: id, percent, done } = response.data;
+  return { id, changes: { percent, done } };
 });
 
 export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (todoId) => {
   const response = await axios.delete(`http://localhost:3030/todos/${todoId}`);
-  return response.data;
+  return response.data._id;
 });
 
 //fetch(GET), add(POST), delete(DELETE), update(PATCH)
@@ -38,34 +39,22 @@ const todosSlice = createSlice({
     [fetchTodos.fulfilled]: (state, action) => {
       state.status = 'succeeded';
       // Add any fetched todos to the array
-      state.todos = state.todos.concat(action.payload);
+      todosAdapter.upsertMany(state, action.payload);
     },
     [fetchTodos.rejected]: (state, action) => {
       state.status = 'failed';
       state.error = action.payload;
     },
-    [addNewTodo.fulfilled]: (state, action) => {
-      state.todos.push(action.payload);
-    },
-    [updateTodo.fulfilled]: (state, action) => {
-      const { _id, percent, done } = action.payload;
-      const existingTodo = state.todos.find((todo) => todo._id === _id);
-      if (existingTodo) {
-        existingTodo.percent = percent;
-        existingTodo.done = done;
-      }
-    },
-    [deleteTodo.fulfilled]: (state, action) => {
-      const { _id } = action.payload;
-      const index = state.todos.findIndex((todo) => todo._id === _id);
-      state.todos.splice(index, 1);
-    },
+    [addNewTodo.fulfilled]: todosAdapter.addOne,
+    [updateTodo.fulfilled]: todosAdapter.updateOne,
+    [deleteTodo.fulfilled]: todosAdapter.removeOne,
   },
 });
 
 export default todosSlice.reducer;
 
-export const selectAllTodos = (state) => state.todos.todos;
-
-export const selectTodoById = (state, todoId) =>
-  state.todos.todos.find((todo) => todo._id === todoId);
+export const {
+  selectAll: selectAllTodos,
+  selectById: selectTodoById,
+  selectIds: selectTodoIds,
+} = todosAdapter.getSelectors((state) => state.todos);

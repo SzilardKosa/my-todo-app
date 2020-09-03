@@ -1,17 +1,19 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { updateTodo, deleteTodo } from './todosSlice';
+import { updateTodo, deleteTodo, selectTodoById } from './todosSlice';
 import close from './close.svg';
 import PropTypes from 'prop-types';
 
-const TodoListItem = ({ todo }) => {
-  const dispatch = useDispatch();
+const TodoListItem = ({ todoId }) => {
+  const todo = useSelector((state) => selectTodoById(state, todoId));
   const { description, percent, done, _id } = todo;
   const style = {
     textDecoration: done ? 'line-through' : 'none',
   };
+
+  const dispatch = useDispatch();
 
   const handleDelete = () => {
     dispatch(deleteTodo(_id));
@@ -65,7 +67,7 @@ const TodoListItem = ({ todo }) => {
 };
 
 TodoListItem.propTypes = {
-  todo: PropTypes.object.isRequired,
+  todoId: PropTypes.string.isRequired,
 };
 
 export default TodoListItem;

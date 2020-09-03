@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import TodoListItem from './TodoListItem';
-import { selectAllTodos, fetchTodos } from './todosSlice';
+import { selectTodoIds, fetchTodos } from './todosSlice';
 
 const TodoList = () => {
   const dispatch = useDispatch();
-  const todos = useSelector(selectAllTodos);
+  const todoIds = useSelector(selectTodoIds);
 
   const fetchStatus = useSelector((state) => state.todos.status);
   const error = useSelector((state) => state.todos.error);
@@ -29,7 +29,7 @@ const TodoList = () => {
       </div>
     );
   } else if (fetchStatus === 'succeeded') {
-    content = todos.map((todo) => <TodoListItem key={todo._id} todo={todo} />);
+    content = todoIds.map((todoId) => <TodoListItem key={todoId} todoId={todoId} />);
   } else if (fetchStatus === 'error') {
     content = <div>{error}</div>;
   }
