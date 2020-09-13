@@ -2,12 +2,14 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { updateTodo, deleteTodo, selectTodoById } from './todosSlice';
+import { updateTodo, deleteTodo, selectTodoById, Todo } from './todosSlice';
 import close from './close.svg';
-import PropTypes from 'prop-types';
+import { RootState } from '../app/store';
 
-const TodoListItem = ({ todoId }) => {
-  const todo = useSelector((state) => selectTodoById(state, todoId));
+type Props = { todoId: string };
+
+const TodoListItem: React.FC<Props> = ({ todoId }) => {
+  const todo = useSelector((state: RootState) => selectTodoById(state, todoId) as Todo);
   const { description, percent, done, _id } = todo;
   const style = {
     textDecoration: done ? 'line-through' : 'none',
@@ -19,7 +21,7 @@ const TodoListItem = ({ todoId }) => {
     dispatch(deleteTodo(_id));
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
     const prev = todo;
     let done = prev.done;
@@ -64,10 +66,6 @@ const TodoListItem = ({ todoId }) => {
       </button>
     </li>
   );
-};
-
-TodoListItem.propTypes = {
-  todoId: PropTypes.string.isRequired,
 };
 
 export default TodoListItem;

@@ -3,16 +3,17 @@ import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { addNewTodo } from './todosSlice';
+import { AppDispatch } from '../app/store';
 
 const AddTodo = () => {
   const [text, setText] = useState('');
-  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+  const [addRequestStatus, setAddRequestStatus] = useState<'idle' | 'pending'>('idle');
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const canSave = Boolean(text) && addRequestStatus === 'idle';
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (canSave) {
       try {

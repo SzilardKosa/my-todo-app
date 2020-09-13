@@ -1,0 +1,15 @@
+What is want to practice?
+-lists
+-forms
+-routing
+-css styling, dark vs light
+
+Name: Todo list app
+Pages:
+	intro: welcome page
+	list: list of todos, adding new todos and filtering results
+	details: viewing todo details and editing
+- navbar elemei: logo, navigáció, dark/light gomb
+- todok elemei: leírás, készen van-e?, hány százalékosan áll?
+- filter elemei: készen van-e?, string keresés a leírásban
+- összesítés: hány százalék van kész összesen

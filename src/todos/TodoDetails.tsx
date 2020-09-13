@@ -1,12 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 import { updateTodo, selectTodoById } from './todosSlice';
+import { RootState } from '../app/store';
 
-const TodoDetails = ({ match }) => {
+type TParams = { id: string };
+
+const TodoDetails: React.FC<RouteComponentProps<TParams>> = ({ match }) => {
   const { id: todoId } = match.params;
-  const todo = useSelector((state) => selectTodoById(state, todoId));
+  const todo = useSelector((state: RootState) => selectTodoById(state, todoId));
   const dispatch = useDispatch();
 
   if (!todo) {
@@ -26,7 +29,7 @@ const TodoDetails = ({ match }) => {
     textDecoration: todo.done ? 'line-through' : 'none',
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
     const percent = parseInt(target.value);
     const done = percent === 100 ? true : false;

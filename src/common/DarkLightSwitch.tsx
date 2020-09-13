@@ -5,7 +5,7 @@ import sun from './sun.svg';
 const DarkLightSwitch = () => {
   const [lightTheme, setLightTheme] = useState(false);
 
-  function handleUpdate(event) {
+  function handleUpdate(event: React.ChangeEvent<HTMLInputElement>) {
     const checked = event.target.checked;
     checked
       ? document.body.classList.add('light-theme')
